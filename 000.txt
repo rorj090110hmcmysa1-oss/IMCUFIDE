@@ -1,0 +1,81 @@
+actualizar
+<form method="POST">
+    {% csrf_token %}
+
+    <label>Equipo:</label>
+    <select name="equipo">
+        {% for equipo in equipos %}
+            <option value="{{ equipo.id }}">{{ equipo }}</option>
+        {% endfor %}
+    </select>
+
+    <label>Juegos Jugados:</label>
+    <input type="number" name="jj">
+
+    <label>Juegos Ganados:</label>
+    <input type="number" name="jg">
+
+    <label>Juegos Perdidos:</label>
+    <input type="number" name="jp">
+
+    <label>Puntos:</label>
+    <input type="number" name="puntos">
+
+    <label>Goles a Favor:</label>
+    <input type="number" name="gaf">
+
+    <label>Goles en Contra:</label>
+    <input type="number" name="gc">
+
+    <label>Diferencia:</label>
+    <input type="number" name="dif">
+
+    <label>Amonestaciones:</label>
+    <input type="number" name="amon">
+
+    <button type="submit">Guardar</button>
+</form>
+
+
+
+++++++++++++++++++++  viws  ++++++++++++++++
+
+def crear_estadistica(request):
+    equipos = equipo.objects.all()
+
+    if request.method == "POST":
+        Estadisticas.objects.update_or_create(
+            equipo_id=request.POST.get("equipo"),
+            defaults={
+                "jj": request.POST.get("jj"),
+                "jg": request.POST.get("jg"),
+                "jp": request.POST.get("jp"),
+                "puntos": request.POST.get("puntos"),
+                "gaf": request.POST.get("gaf"),
+                "gc": request.POST.get("gc"),
+                "dif": request.POST.get("dif"),
+                "amonestaciones": request.POST.get("amon"),
+            }
+        )
+        return redirect("tabla_posiciones")
+
+    return render(request, "Resultados/crear_estadistica.html", {
+        "equipos": equipos
+    })
+
+
+
+
+
+
+
+
+++++++++++++++++++++++   url  +++++++++++++++++++0
+
+    path("posiciones/editar/<int:id>/", views.editar_estadistica, name="editar_estadistica"),
+    path("posiciones/eliminar/<int:id>/", views.eliminar_estadistica, name="eliminar_estadistica"),
+    
+
+
+
+
